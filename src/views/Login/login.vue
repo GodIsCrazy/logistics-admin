@@ -1,9 +1,25 @@
 <template>
-  <div></div>
+  <div class="index">
+    <div id='index_pc_bj'>
+      <FormConetnt :form="form"></FormConetnt>
+
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
-import { Vue } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
+import FormConetnt from './components/FormContent.vue'
 
-class Login extends Vue {}
+@Component({
+  components: {
+    FormConetnt
+  }
+})
+export default class Login extends Vue {
+  form:object = {
+    name: 'zs',
+    psw: '123456'
+  }
+}
 </script>
