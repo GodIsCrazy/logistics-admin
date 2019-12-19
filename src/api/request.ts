@@ -1,4 +1,4 @@
-import axios from 'axios'
+import http from '@/HttpInterceptors'
 interface Param {
   method: string
   url: string
@@ -8,7 +8,7 @@ interface Param {
 const request = (data: object, url: string, method: any = 'get'): any => {
   return new Promise(async (resolve: any, reject: any) => {
     try {
-      let result = await axios.request({
+      let result = await http.request({
         url,
         method,
         data: method.toLowerCase() === 'get' ? {} : data,

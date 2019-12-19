@@ -51,7 +51,9 @@ export default class FormContent extends Vue {
         userName: this.loginForm.account,
         userPwd: this.loginForm.checkPass
       }
-      await Api.submitLogin(params)
+      this.$store.dispatch('LOGIN_IN', params).then(() => {
+        this.$router.push({ name: 'home' })
+      })
     } catch (error) {}
   }
 }
