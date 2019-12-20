@@ -13,7 +13,6 @@ const instance = axios.create({
 
 instance.interceptors.request.use(
   (config: any): any => {
-    debugger
     if (store.getters.token) {
       config.headers['AUTH-TOKEN'] = store.getters.token
     }

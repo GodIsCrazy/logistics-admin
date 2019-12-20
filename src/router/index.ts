@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import sysSetting from './sysSetting'
 
 Vue.use(VueRouter)
 
@@ -19,7 +18,14 @@ const routes = [
           title: '首页'
         }
       },
-
+      {
+        path: 'Login',
+        name: 'login',
+        component: () => import('@/views/Login/login.vue'),
+        meta: {
+          title: '登录页'
+        }
+      },
       {
         path: 'about',
         name: 'about',
@@ -30,17 +36,8 @@ const routes = [
         meta: {
           title: '关于我们'
         }
-      },
-      ...sysSetting
+      }
     ]
-  },
-  {
-    path: '/Login',
-    name: 'login',
-    component: () => import('@/views/Login/login.vue'),
-    meta: {
-      title: '登录页'
-    }
   }
 
 ]

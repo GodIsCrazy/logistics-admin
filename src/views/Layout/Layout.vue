@@ -47,12 +47,6 @@ export default class Layout extends Vue {}
     }
     .warp-content {
       background: rgb(240, 242, 245);
-      padding: 10px;
-      .main-view {
-        width: 100%;
-        height: 100%;
-        background: #fff;
-      }
     }
   }
 }
