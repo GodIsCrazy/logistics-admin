@@ -1,54 +1,41 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import sysSetting from './sysSetting'
+import Router from './permission'
+import store from '@/store'
+import Utils from '@/utils'
+import router from '@/router'
 
-Vue.use(VueRouter)
+Router.beforeEach((to: any, from: any, next: any) => {
+  if (to.path === '/login') {
+    if (Utils.getCookie('token')) {
+      store.dispatch('GET_PERSON_INFO').then(() => {
+        router.push({
+          path: '/home'
+        })
+      }).catch(() => {
 
-const routes = [
-  {
-    path: '/',
-    name: 'index',
-    redirect: 'home',
-    component: () => import('@/views/Layout/Layout.vue'),
-    children: [
-      {
-        path: 'home',
-        name: 'home',
-        component: () => import('@/views/Home.vue'),
-        meta: {
-          title: '首页'
+      })
+    } else {
+      next()
+    }
+  } else {
+    if (Utils.getCookie('token')) {
+      store.dispatch('GET_PERSON_INFO').then(() => {
+        next()
+      }).catch(() => {
+
+      })
+    } else {
+      router.push({
+        path: '/login',
+        query: {
+          redirect: router.currentRoute.fullPath
         }
-      },
-
-      {
-        path: 'about',
-        name: 'about',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
-        meta: {
-          title: '关于我们'
-        }
-      },
-      ...sysSetting
-    ]
-  },
-  {
-    path: '/Login',
-    name: 'login',
-    component: () => import('@/views/Login/login.vue'),
-    meta: {
-      title: '登录页'
+      })
     }
   }
-
-]
-
-const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes
 })
 
-export default router
+Router.afterEach((to: any, from: any) => {
+
+})
+
+export default Router

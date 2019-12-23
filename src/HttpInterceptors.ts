@@ -1,5 +1,6 @@
 import axios from 'axios'
 import store from '@/store'
+import utils from '@/utils'
 import router from '@/router'
 
 const instance = axios.create({
@@ -13,9 +14,8 @@ const instance = axios.create({
 
 instance.interceptors.request.use(
   (config: any): any => {
-    debugger
-    if (store.getters.token) {
-      config.headers['AUTH-TOKEN'] = store.getters.token
+    if (utils.getCookie('token')) {
+      config.headers['AUTH-TOKEN'] = utils.getCookie('token')
     }
     return config
   },
@@ -31,6 +31,7 @@ instance.interceptors.response.use(
   (response: any): any => {
     let data = response.data
     if (data.status === 'C00007') { // token 失效
+      utils.removeCookieItem('token')
       router.push({
         path: '/login',
         query: {

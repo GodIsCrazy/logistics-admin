@@ -3,3 +3,83 @@ body {
   height: 100%;
   width: 100%;
 }
+
+.width-240 {
+  width: 240px;
+}
+
+.el-input__inner {
+  padding: 0 6px;
+  height: 32px;
+  line-height: 32px;
+  color: #666;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+}
+
+.el-button {
+  padding: 7px 16px;
+  font-size: 14px;
+  height: 32px;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.table-operate-btn>.cell>span,
+.table-operate-btn>span {
+  color: #0092ff;
+  cursor: pointer;
+}
+
+.el-pagination button,
+.el-pagination span:not([class*=suffix]),
+.el-pager li {
+  height: 56px;
+  line-height: 56px;
+}
+
+.el-table th {
+  background-color: #fafafa;
+  color: rgba(0, 0, 0, .85);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.el-table td,
+.el-table th {
+  padding: 9px 0;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.el-form-item {
+  margin-bottom: 10px;
+}
+
+.el-dialog__body {
+  padding: 1px 24px 0;
+}
+
+.el-dialog__header {
+  height: 56px;
+  line-height: 56px;
+  margin: 0;
+  padding: 0 32px 0 15px;
+}
+
+.el-dialog__title {
+  color: #0092ff;
+  position: relative;
+  padding-left: 6px;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.el-dialog__title:after {
+  position: absolute;
+  content: "";
+  top: 0;
+  left: 0;
+  width: 2px;
+  height: 22px;
+  background: #0092ff;
+}

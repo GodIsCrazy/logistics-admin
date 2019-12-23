@@ -53,12 +53,14 @@ import { Vue, Component, Watch } from 'vue-property-decorator'
 export default class Menu extends Vue {
   isCollapse: Boolean = false
   activeRoute: String = '/home'
-  handleSelectMenu() {}
-  chooseItem() {}
+  handleSelectMenu(index: any, item: any) {}
+  chooseItem(item: any) {
+    this.$router.push(item.path)
+  }
   get menuList() {
     console.log(this.$router)
-    let $router: any = this.$router
-    return $router.options.routes[0].children
+    let $router: any = this.$store.state.user.permissionMenu
+    return $router
   }
   @Watch('$route')
   routeChange(oldV: any, newV: any) {
@@ -79,6 +81,17 @@ export default class Menu extends Vue {
 }
 /deep/ .el-submenu__title:hover {
   background: #0079ff;
+}
+/deep/ .el-menu-item:focus,
+.el-menu-item:hover {
+  background-color: #0079ff;
+  color: #fff;
+}
+/deep/ .el-menu {
+  background: #0092ff;
+}
+/deep/ .el-menu-item {
+  color: #fff;
 }
 .menu {
   height: 100%;

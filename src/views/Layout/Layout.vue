@@ -37,6 +37,7 @@ export default class Layout extends Vue {}
   flex-direction: column;
   .header {
     height: 60px;
+    line-height: 60px;
     flex-shrink: 0;
   }
   .content {
@@ -51,7 +52,9 @@ export default class Layout extends Vue {}
       .main-view {
         width: 100%;
         height: 100%;
+        padding: 10px;
         background: #fff;
+        box-sizing: border-box;
       }
     }
   }
