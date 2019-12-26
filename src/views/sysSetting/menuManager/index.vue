@@ -1,7 +1,7 @@
 <template>
   <div class="menu-manager">
     <SearchForm @searchForm="searchForm"></SearchForm>
-    <TableComponent :tableData="tableData" :loading="loading"></TableComponent>
+    <TableComponent :tableData="tableData" :loading="loading" @refresh="refreshTable"></TableComponent>
     <!-- 分页Start -->
     <div class="pagination-bottom">
       <el-pagination
@@ -49,6 +49,11 @@ export default class MenuManager extends Vue {
 
   handleCurrentChange(currentPage: any) {
     this.currentPage = currentPage
+    this.getMenuList()
+  }
+  refreshTable() {
+    this.pageSize = 15
+    this.currentPage = 1
     this.getMenuList()
   }
   async getMenuList() {

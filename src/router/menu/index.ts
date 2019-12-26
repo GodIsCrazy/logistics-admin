@@ -1,7 +1,10 @@
 export default [
   {
-    path: '/MenuManager',
+    path: '/sysSetting/MenuManager',
     name: 'MenuManager',
-    component: () => import('@/views/Login/login.vue')
+    component: () => import('@/views/sysSetting/menuManager/index.vue'),
+    meta: {
+      title: '菜单管理'
+    }
   }
 ]

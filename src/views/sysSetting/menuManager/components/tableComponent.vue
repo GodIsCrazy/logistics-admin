@@ -94,23 +94,46 @@
         </template>
       </el-table-column>
     </el-table>
+    <EditModal
+      :type="modalType"
+      :ModalVisible="ModalVisible"
+      :rowData="rowData"
+      @modalClose="modalClose"
+      v-if="ModalVisible"
+    ></EditModal>
   </div>
 </template>
 
 <script lang="ts">
 import data from './data'
+import EditModal from './editModal.vue'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
-@Component
+@Component({
+  components: {
+    EditModal
+  }
+})
 export default class TableComponent extends Vue {
   @Prop({ default: [] })
   tableData: any
 
+  rowData: any = {}
+  modalType: string = 'edit'
+  ModalVisible: boolean = false
+
   loading: boolean = false
   tableH: any = data
-  update(row: object, type: string) {}
+  update(row: object, type: string) {
+    this.ModalVisible = true
+    this.rowData = row
+  }
   get table() {
     return this.tableData || []
+  }
+  modalClose() {
+    // 模态框关闭
+    this.ModalVisible = false
   }
 }
 </script>

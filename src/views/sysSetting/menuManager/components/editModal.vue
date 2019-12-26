@@ -77,6 +77,8 @@ export default class EditModal extends Vue {
   type: any
   @Prop()
   ModalVisible: any
+  @Prop()
+  rowData: any
 
   dialogVisible: boolean = true
   FormData: object = {}
@@ -116,8 +118,11 @@ export default class EditModal extends Vue {
 
   async saveMenu(): Promise<any> {
     try {
-      let params = {}
+      let params: any = {}
       params = { ...this.FormData }
+      if (this.type === 'edit') {
+        params.id = this.rowData.id
+      }
       await Api.addMenu(params)
       this.modalChange()
     } catch (error) {}
