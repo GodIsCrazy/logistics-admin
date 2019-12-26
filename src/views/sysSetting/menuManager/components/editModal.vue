@@ -11,28 +11,32 @@
     <!-- 新增和编辑 start -->
     <div class="form-content">
       <el-form class="form" ref="form" :model="FormData" label-width="100px" :rules="rules">
-        <el-form-item label="菜单名称：" prop="riskViewCode">
+        <el-form-item label="菜单名称：" prop="name">
           <el-input
             :disabled="this.type !== 'add'"
             style="width:100%;"
             maxlength="30"
             placeholder="请输入菜单名称"
-            v-model="FormData.riskViewCode"
+            v-model="FormData.name"
           ></el-input>
         </el-form-item>
-        <el-form-item label="菜单路径：" prop="riskViewName">
+        <el-form-item label="菜单路径：" prop="path">
           <el-input
             style="width:100%;"
             maxlength="30"
             placeholder="请输入菜单路径"
-            v-model="FormData.riskViewName"
+            v-model="FormData.path"
           ></el-input>
         </el-form-item>
-        <el-form-item label="父级菜单：" prop="resultType">
-          <el-select v-model="FormData.resultType" placeholder="请选择" style="width:100%">
+        <el-form-item label="父级菜单：" prop="parentId">
+          <el-select v-model="FormData.parentId" placeholder="请选择" style="width:100%">
             <el-option label="请选择" value></el-option>
-            <el-option label="单条" value="SINGLE"></el-option>
-            <el-option label="多条" value="MULTIPLE"></el-option>
+            <el-option
+              :label="item.name"
+              :value="item.id"
+              v-for="(item, index) in parentMenu"
+              :key="index"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="状态：" prop="state">
@@ -41,7 +45,7 @@
             <el-option label="禁用" value="DISABLED"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="备注：" prop="queryParams">
+        <el-form-item label="备注：">
           <el-input
             :rows="3"
             style="width:100%;"
@@ -49,7 +53,7 @@
             maxlength="200"
             resize="none"
             placeholder="请填写备注"
-            v-model="FormData.queryParams"
+            v-model="FormData.remark"
           ></el-input>
         </el-form-item>
       </el-form>
@@ -76,8 +80,12 @@ export default class EditModal extends Vue {
 
   dialogVisible: boolean = true
   FormData: object = {}
+  parentMenu: any = []
   rules: object = {
-    state: [{ required: true, message: '请选择状态', trigger: 'change' }]
+    state: [{ required: true, message: '请选择状态', trigger: 'change' }],
+    name: [{ required: true, message: '请填写菜单名称', trigger: 'change' }],
+    path: [{ required: true, message: '请填写菜单路径', trigger: 'change' }]
+    // parentId: [{ required: true, message: '请选择父菜单', trigger: 'change' }]
   }
   titleMap: any = {
     add: '新增菜单',
@@ -89,6 +97,10 @@ export default class EditModal extends Vue {
   }
   @Emit('modalClose')
   modalChange(val?: any) {}
+
+  mounted() {
+    this.getFristMenu()
+  }
   save(): void {
     let form: any = this.$refs['form']
     form.validate((val: any) => {
@@ -105,8 +117,15 @@ export default class EditModal extends Vue {
   async saveMenu(): Promise<any> {
     try {
       let params = {}
+      params = { ...this.FormData }
       await Api.addMenu(params)
       this.modalChange()
+    } catch (error) {}
+  }
+  async getFristMenu(): Promise<any> {
+    try {
+      let data = await Api.getFristMenu()
+      this.parentMenu = data
     } catch (error) {}
   }
   get modalTitle() {

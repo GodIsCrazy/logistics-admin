@@ -7,5 +7,9 @@ export default {
   },
   addMenu: (data: object) => {
     return Request({ ...data }, '/logistics/menu/addMenu', 'post')
+  },
+  /* 获取一级菜单 */
+  getFristMenu: (data: object = {}) => {
+    return Request({ ...data }, '/logistics/menu/getFirstMenu')
   }
 }
