@@ -1,4 +1,4 @@
-import MenuManger from '../menu'
+import MenuManger from './menuManager'
 export default [
   ...MenuManger
 ]
