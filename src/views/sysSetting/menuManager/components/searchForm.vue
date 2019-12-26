@@ -46,7 +46,7 @@ export default class searchForm extends Vue {
   ModalVisible: boolean = false
 
   @Emit('searchForm')
-  refreshTable(form: object) {}
+  refreshTable(form?: object) {}
 
   search() {
     this.refreshTable(this.queryForm)
@@ -62,6 +62,7 @@ export default class searchForm extends Vue {
   }
   modalClose(val: any) {
     this.ModalVisible = false
+    this.refreshTable()
   }
 }
 </script>

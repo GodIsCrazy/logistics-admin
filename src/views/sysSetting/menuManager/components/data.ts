@@ -30,7 +30,7 @@ export default [
     }
   },
   {
-    prop: 'updateTime',
+    prop: 'updatedAt',
     label: '最近更新时间',
     minWidth: '160',
     type: 'date'

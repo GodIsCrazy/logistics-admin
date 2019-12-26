@@ -90,7 +90,8 @@
         fixed="right"
       >
         <template slot-scope="scope">
-          <span type="text" @click="update(scope.row,'send')" v-if="scope.row.parent_id !== ''">修改</span>
+          <span type="text" @click="update(scope.row,'send')" v-if="scope.row.parentId">修改</span>
+          <span type="text" @click="update(scope.row,'remove')">删除</span>
         </template>
       </el-table-column>
     </el-table>
@@ -107,7 +108,8 @@
 <script lang="ts">
 import data from './data'
 import EditModal from './editModal.vue'
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import Api from '@/api/menu'
+import { Vue, Component, Prop, Emit } from 'vue-property-decorator'
 
 @Component({
   components: {
@@ -124,16 +126,38 @@ export default class TableComponent extends Vue {
 
   loading: boolean = false
   tableH: any = data
+
+  @Emit('refresh')
+  refreshTable() {}
+
   update(row: object, type: string) {
+    if (type === 'remove') {
+      this.removeRow(row)
+      return
+    }
     this.ModalVisible = true
     this.rowData = row
   }
+
+  async removeRow(row: any) {
+    try {
+      let params = {
+        id: row.id
+      }
+      await Api.deleteMenu(params)
+      this.refreshTable()
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   get table() {
     return this.tableData || []
   }
   modalClose() {
     // 模态框关闭
     this.ModalVisible = false
+    this.refreshTable()
   }
 }
 </script>

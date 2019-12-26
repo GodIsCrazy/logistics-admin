@@ -13,7 +13,6 @@
       <el-form class="form" ref="form" :model="FormData" label-width="100px" :rules="rules">
         <el-form-item label="菜单名称：" prop="name">
           <el-input
-            :disabled="this.type !== 'add'"
             style="width:100%;"
             maxlength="30"
             placeholder="请输入菜单名称"
@@ -102,6 +101,9 @@ export default class EditModal extends Vue {
 
   mounted() {
     this.getFristMenu()
+    if (this.type === 'edit') {
+      this.getMenuDetailById()
+    }
   }
   save(): void {
     let form: any = this.$refs['form']
@@ -123,7 +125,7 @@ export default class EditModal extends Vue {
       if (this.type === 'edit') {
         params.id = this.rowData.id
       }
-      await Api.addMenu(params)
+      await Api.saveMenu(params)
       this.modalChange()
     } catch (error) {}
   }
@@ -133,6 +135,16 @@ export default class EditModal extends Vue {
       this.parentMenu = data
     } catch (error) {}
   }
+  async getMenuDetailById(): Promise<any> {
+    try {
+      let params = {
+        id: this.rowData.id
+      }
+      let data = await Api.getMenuDetailById(params)
+      this.FormData = data
+    } catch (error) {}
+  }
+
   get modalTitle() {
     return this.titleMap[this.type]
   }

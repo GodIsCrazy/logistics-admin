@@ -36,11 +36,19 @@ export default class MenuManager extends Vue {
   currentPage: number = 1
   pageSize: number = 15
   loading: boolean = false
+  formData: any = {}
 
   mounted() {
     this.getMenuList()
   }
-  searchForm(form: object) {}
+  searchForm(form: object) {
+    if (form) {
+      this.formData = form
+    }
+    this.pageSize = 15
+    this.currentPage = 1
+    this.getMenuList()
+  }
 
   handleSizeChange(pageSize: any) {
     this.pageSize = pageSize
@@ -62,6 +70,7 @@ export default class MenuManager extends Vue {
         pageSize: this.pageSize,
         currentPage: this.currentPage
       }
+      params = { ...params, ...this.formData }
       let data: any = await Api.getMenuList(params)
       console.log(data)
       this.tableData = data.items
