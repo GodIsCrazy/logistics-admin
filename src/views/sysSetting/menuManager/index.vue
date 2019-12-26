@@ -42,18 +42,29 @@ export default class MenuManager extends Vue {
   }
   searchForm(form: object) {}
 
-  handleSizeChange(pageSize: any) {}
+  handleSizeChange(pageSize: any) {
+    this.pageSize = pageSize
+    this.getMenuList()
+  }
 
-  handleCurrentChange(currentPage: any) {}
+  handleCurrentChange(currentPage: any) {
+    this.currentPage = currentPage
+    this.getMenuList()
+  }
   async getMenuList() {
     try {
       let params: object = {
-        userName: 'admin'
+        pageSize: this.pageSize,
+        currentPage: this.currentPage
       }
       let data: any = await Api.getMenuList(params)
-      this.tableData = data.menuList
       console.log(data)
-    } catch (error) {}
+      this.tableData = data.items
+      this.recordCount = data.recordCount
+      console.log(data)
+    } catch (error) {
+      console.log(error)
+    }
   }
 }
 </script>

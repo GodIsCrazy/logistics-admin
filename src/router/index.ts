@@ -11,7 +11,9 @@ Router.beforeEach((to: any, from: any, next: any) => {
           path: '/home'
         })
       }).catch(() => {
-
+        // next()
+        Utils.removeCookieItem('token')
+        next()
       })
     } else {
       next()
@@ -21,7 +23,13 @@ Router.beforeEach((to: any, from: any, next: any) => {
       store.dispatch('GET_PERSON_INFO').then(() => {
         next()
       }).catch(() => {
-
+        Utils.removeCookieItem('token')
+        router.push({
+          path: '/login',
+          query: {
+            redirect: router.currentRoute.fullPath
+          }
+        })
       })
     } else {
       router.push({

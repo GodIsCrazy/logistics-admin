@@ -57,6 +57,9 @@ export default class Menu extends Vue {
   chooseItem(item: any) {
     this.$router.push(item.path)
   }
+  mounted() {
+    this.activeRoute = this.$route.path
+  }
   get menuList() {
     console.log(this.$router)
     let $router: any = this.$store.state.user.permissionMenu

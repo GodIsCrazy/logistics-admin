@@ -5,5 +5,9 @@ export default {
   /* 登录接口 */
   submitLogin: (data: object = {}): any => {
     return Request({ ...data }, '/logistics/users/login', 'post')
+  },
+  /* 获取用户信息 */
+  getUserInfo: (data: object = {}): Promise<any> => {
+    return Request({ ...data }, '/logistics/users/userInfo')
   }
 }

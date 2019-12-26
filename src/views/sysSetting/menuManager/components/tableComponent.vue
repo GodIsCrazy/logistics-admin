@@ -5,6 +5,7 @@
       v-loading="loading"
       highlight-current-row
       tooltip-effect="light"
+      default-expand-all
       height="100%"
       row-key="id"
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
@@ -89,7 +90,7 @@
         fixed="right"
       >
         <template slot-scope="scope">
-          <span type="text" @click="update(scope.row,'send')" v-if="scope.row.parent_id !== 0">修改</span>
+          <span type="text" @click="update(scope.row,'send')" v-if="scope.row.parent_id !== ''">修改</span>
         </template>
       </el-table-column>
     </el-table>
