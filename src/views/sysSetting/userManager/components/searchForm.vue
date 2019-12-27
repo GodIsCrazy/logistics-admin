@@ -48,9 +48,10 @@ export default class searchForm extends Vue {
     this.ModalVisible = true
   }
   reset() {
-    let $options = this.$options
-    let data: any = $options
-    Object.assign(this.$data.queryForm, data.data().queryForm)
+    for (let key in this.queryForm) {
+      this.queryForm[key] = ''
+    }
+    this.search()
   }
   modalClose(val: any) {
     this.ModalVisible = false
