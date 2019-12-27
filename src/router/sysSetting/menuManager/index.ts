@@ -6,5 +6,13 @@ export default [
     meta: {
       title: '菜单管理'
     }
+  },
+  {
+    path: '/sysSetting/roleManager',
+    name: 'MenuManager',
+    component: () => import('@/views/sysSetting/roleManager/index.vue'),
+    meta: {
+      title: '角色管理'
+    }
   }
 ]
