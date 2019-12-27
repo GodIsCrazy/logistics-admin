@@ -2,6 +2,7 @@ import axios from 'axios'
 import store from '@/store'
 import utils from '@/utils'
 import router from '@/router'
+import { Message } from 'element-ui'
 
 const instance = axios.create({
   headers: {
@@ -38,6 +39,7 @@ instance.interceptors.response.use(
           redirect: router.currentRoute.fullPath
         }
       })
+      Message.error(data.msg)
     } else if (data.status === 'C00003') {
       router.push({
         path: '/login',
@@ -45,9 +47,13 @@ instance.interceptors.response.use(
           redirect: router.currentRoute.fullPath
         }
       })
+      Message.error(data.msg)
+    } else if (data.status === 'C00005') {
+      Message.error(data.msg)
     }
     return data.result
   }, (err) => {
+    Message.error(err)
     return Promise.reject(err)
   })
 
