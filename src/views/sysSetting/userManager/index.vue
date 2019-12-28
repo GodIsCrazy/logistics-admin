@@ -72,10 +72,8 @@ export default class MenuManager extends Vue {
       }
       params = { ...params, ...this.formData }
       let data: any = await Api.getUserList(params)
-      console.log(data)
       this.tableData = data.items
       this.recordCount = data.recordCount
-      console.log(data)
     } catch (error) {
       console.log(error)
     }

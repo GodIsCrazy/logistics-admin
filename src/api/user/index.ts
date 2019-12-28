@@ -5,7 +5,7 @@ export default {
   getUserList: (data: object): any => {
     return Request({ ...data }, '/logistics/user/userList')
   },
-  saveUser: (data: object) => {
+  saveUser: (data: any = {}) => {
     return Request({ ...data }, '/logistics/user/saveUser', 'post')
   },
 
@@ -19,5 +19,8 @@ export default {
   },
   getRoleList: (data:object = {}) => {
     return Request({ ...data }, '/logistics/role/getRoleList')
+  },
+  checkLoginName: (data:object) => {
+    return Request({ ...data }, '/logistics/user/checkLoginName')
   }
 }

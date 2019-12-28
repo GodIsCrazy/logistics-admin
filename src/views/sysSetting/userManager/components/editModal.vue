@@ -71,13 +71,26 @@ export default class EditModal extends Vue {
   @Prop()
   rowData: any
 
+  checkLoginname = async (rule:any, value:any, callback:any) => {
+    try {
+      let params = {
+        loginName: value
+      }
+      let result = await Api.checkLoginName(params)
+      if (result.status !== 'C00001') {
+        callback(new Error('登录名重复,请更换!'))
+      } else {
+        callback()
+      }
+    } catch (error) {}
+  }
   dialogVisible: boolean = true
-  FormData: object = {}
+  FormData: any = {}
   roleList: any = []
   rules: object = {
     roleId: [{ required: true, message: '请选择角色', trigger: 'change' }],
     name: [{ required: true, message: '请输入用户名称', trigger: 'change' }],
-    loginName: [{ required: true, message: '请输入登录名称', trigger: 'change' }]
+    loginName: [{ required: true, message: '请输入登录名称', trigger: 'change' }, { validate: this.checkLoginname, trigger: 'blur' }]
     // parentId: [{ required: true, message: '请选择父菜单', trigger: 'change' }]
   }
   titleMap: any = {
@@ -101,7 +114,7 @@ export default class EditModal extends Vue {
     let form: any = this.$refs['form']
     form.validate((val: any) => {
       if (val) {
-        this.saveMenu()
+        this.saveUser()
       }
     })
   }
@@ -110,10 +123,13 @@ export default class EditModal extends Vue {
     this.modalChange()
   }
 
-  async saveMenu(): Promise<any> {
+  async saveUser(): Promise<any> {
     try {
+      let roleId = this.FormData.roleId
+      delete this.FormData.roleId
       let params: any = {}
-      params = { ...this.FormData }
+      params.user = this.FormData
+      params.roleId = roleId
       if (this.type === 'edit') {
         params.id = this.rowData.id
       }
@@ -133,7 +149,6 @@ export default class EditModal extends Vue {
         id: this.rowData.id
       }
       let data = await Api.getUserDetailById(params)
-      debugger
       this.FormData = data
     } catch (error) {}
   }
