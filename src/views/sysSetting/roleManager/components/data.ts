@@ -11,8 +11,8 @@ export default [
     label: '角色名称',
     minWidth: '160'
   }, {
-    prop: 'remark',
-    label: '备注',
+    prop: 'describe',
+    label: '描述',
     minWidth: '100'
   }, {
     prop: 'state',

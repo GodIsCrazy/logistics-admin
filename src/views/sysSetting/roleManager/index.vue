@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts">
-import Api from '@/api/menu'
+import Api from '@/api/role'
 import { Vue, Component } from 'vue-property-decorator'
 import SearchForm from './components/searchForm.vue'
 import TableComponent from './components/tableComponent.vue'
@@ -71,7 +71,7 @@ export default class MenuManager extends Vue {
         currentPage: this.currentPage
       }
       params = { ...params, ...this.formData }
-      let data: any = await Api.getMenuList(params)
+      let data: any = await Api.getRoleListPage(params)
       console.log(data)
       this.tableData = data.items
       this.recordCount = data.recordCount

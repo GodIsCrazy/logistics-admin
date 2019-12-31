@@ -19,5 +19,9 @@ export default {
   /* 删除菜单 */
   deleteMenu: (data: object = {}) => {
     return Request({ ...data }, '/logistics/menu/deleteMenu')
+  },
+  /* AllMenuList 获取全部菜单 */
+  getAllMenuList: (data: object = {}) => {
+    return Request({ ...data }, '/logistics/menu/AllMenuList')
   }
 }

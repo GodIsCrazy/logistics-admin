@@ -11,39 +11,33 @@
     <!-- 新增和编辑 start -->
     <div class="form-content">
       <el-form class="form" ref="form" :model="FormData" label-width="100px" :rules="rules">
-        <el-form-item label="菜单名称：" prop="name">
+        <el-form-item label="角色名称：" prop="name">
           <el-input
             style="width:100%;"
             maxlength="30"
-            placeholder="请输入菜单名称"
+            placeholder="请输入角色名称"
             v-model="FormData.name"
           ></el-input>
         </el-form-item>
-        <el-form-item label="菜单路径：" prop="path">
+        <el-form-item label="角色编码：" prop="path">
+          <el-input style="width:100%;" maxlength="30" placeholder="角色编码" v-model="FormData.path"></el-input>
+        </el-form-item>
+        <el-form-item label="父级菜单：" prop="names">
           <el-input
+            disabled
             style="width:100%;"
             maxlength="30"
-            placeholder="请输入菜单路径"
-            v-model="FormData.path"
+            placeholder="请配置权限菜单"
+            v-model="FormData.names"
           ></el-input>
+          <div class="select-btn" @click="openSelect">选择</div>
         </el-form-item>
-        <el-form-item label="父级菜单：" prop="parentId">
-          <el-select v-model="FormData.parentId" placeholder="请选择" style="width:100%">
-            <el-option label="请选择" value></el-option>
-            <el-option
-              :label="item.name"
-              :value="item.id"
-              v-for="(item, index) in parentMenu"
-              :key="index"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="状态：" prop="state">
+        <!-- <el-form-item label="状态：" prop="state">
           <el-select v-model="FormData.state" placeholder="请选择状态" style="width:100%">
             <el-option label="启用" value="ENABLED"></el-option>
             <el-option label="禁用" value="DISABLED"></el-option>
           </el-select>
-        </el-form-item>
+        </el-form-item>-->
         <el-form-item label="备注：">
           <el-input
             :rows="3"
@@ -58,6 +52,11 @@
       </el-form>
     </div>
     <!-- 新增和编辑 end -->
+    <selectMenu
+      :ModalVisible="SelectModalVisible"
+      @modalClose="SelectmodalClose"
+      v-if="SelectModalVisible"
+    ></selectMenu>
     <!-- 模态框按钮 -->
     <span slot="footer" class="dialog-footer">
       <el-button type="primary" @click="save">确 定</el-button>
@@ -68,9 +67,14 @@
 
 <script lang="ts">
 import Api from '@/api/menu'
+import selectMenu from './selectMenu.vue'
 import { Vue, Component, Prop, Watch, Emit } from 'vue-property-decorator'
 
-@Component
+@Component({
+  components: {
+    selectMenu
+  }
+})
 export default class EditModal extends Vue {
   @Prop({ default: '' })
   type: any
@@ -80,12 +84,15 @@ export default class EditModal extends Vue {
   rowData: any
 
   dialogVisible: boolean = true
+  SelectModalVisible: boolean = false
   FormData: object = {}
   parentMenu: any = []
+  menus: any = []
   rules: object = {
     state: [{ required: true, message: '请选择状态', trigger: 'change' }],
     name: [{ required: true, message: '请填写菜单名称', trigger: 'change' }],
-    path: [{ required: true, message: '请填写菜单路径', trigger: 'change' }]
+    path: [{ required: true, message: '请填写菜单路径', trigger: 'change' }],
+    names: [{ required: true, message: '请选择菜单', trigger: 'change' }]
     // parentId: [{ required: true, message: '请选择父菜单', trigger: 'change' }]
   }
   titleMap: any = {
@@ -116,6 +123,17 @@ export default class EditModal extends Vue {
 
   handleModalClose(): void {
     this.modalChange()
+  }
+
+  SelectmodalClose(val: any): void {
+    this.menus = val
+    let names = this.menus.map((res: any) => res.name)
+    this.$set(this.FormData, 'names', names.join(','))
+    this.SelectModalVisible = false
+  }
+
+  openSelect(): void {
+    this.SelectModalVisible = true
   }
 
   async saveMenu(): Promise<any> {
@@ -150,3 +168,15 @@ export default class EditModal extends Vue {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.select-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 9;
+  color: #0092ff;
+  cursor: pointer;
+}
+</style>

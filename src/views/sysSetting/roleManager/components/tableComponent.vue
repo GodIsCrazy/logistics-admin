@@ -5,10 +5,7 @@
       v-loading="loading"
       highlight-current-row
       tooltip-effect="light"
-      default-expand-all
       height="100%"
-      row-key="id"
-      :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
     >
       <div slot="empty">
         <div v-if="!loading" class="diyNoData">暂无匹配数据</div>
