@@ -87,7 +87,7 @@
         fixed="right"
       >
         <template slot-scope="scope">
-          <span type="text" @click="update(scope.row,'send')" v-if="scope.row.parentId">修改</span>
+          <span type="text" @click="update(scope.row,'send')">修改</span>
           <span type="text" @click="update(scope.row,'remove')">删除</span>
         </template>
       </el-table-column>
@@ -105,7 +105,7 @@
 <script lang="ts">
 import data from './data'
 import EditModal from './editModal.vue'
-import Api from '@/api/menu'
+import Api from '@/api/role'
 import { Vue, Component, Prop, Emit } from 'vue-property-decorator'
 
 @Component({
@@ -138,7 +138,7 @@ export default class TableComponent extends Vue {
 
   async removeRow(row: any) {
     try {
-      await this.$confirm('删除此菜单，是否继续？', '提示', {
+      await this.$confirm('删除此角色，是否继续？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         cancelButtonClass: 'canel-btn',
@@ -147,7 +147,7 @@ export default class TableComponent extends Vue {
       let params = {
         id: row.id
       }
-      await Api.deleteMenu(params)
+      await Api.deleteRoleById(params)
       this.refreshTable()
     } catch (error) {
       console.log(error)

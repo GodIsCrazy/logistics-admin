@@ -48,8 +48,9 @@ instance.interceptors.response.use(
         }
       })
       Message.error(data.msg)
-    } else if (data.status === 'C00005') {
+    } else if (data.status === 'C00005' || data.status === 'C00006') {
       Message.error(data.msg)
+      return Promise.reject(data.msg)
     }
     return data.result
   }, (err) => {

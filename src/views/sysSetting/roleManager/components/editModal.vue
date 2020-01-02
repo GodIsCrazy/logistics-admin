@@ -19,8 +19,13 @@
             v-model="FormData.name"
           ></el-input>
         </el-form-item>
-        <el-form-item label="角色编码：" prop="path">
-          <el-input style="width:100%;" maxlength="30" placeholder="角色编码" v-model="FormData.path"></el-input>
+        <el-form-item label="角色编码：" prop="role">
+          <el-input
+            style="width:100%;"
+            maxlength="30"
+            placeholder="请输入角色编码"
+            v-model="FormData.role"
+          ></el-input>
         </el-form-item>
         <el-form-item label="父级菜单：" prop="names">
           <el-input
@@ -46,7 +51,7 @@
             maxlength="200"
             resize="none"
             placeholder="请填写备注"
-            v-model="FormData.remark"
+            v-model="FormData.describe"
           ></el-input>
         </el-form-item>
       </el-form>
@@ -54,6 +59,8 @@
     <!-- 新增和编辑 end -->
     <selectMenu
       :ModalVisible="SelectModalVisible"
+      :treeData="treeData"
+      :menuIds="FormData.menuIds"
       @modalClose="SelectmodalClose"
       v-if="SelectModalVisible"
     ></selectMenu>
@@ -66,7 +73,8 @@
 </template>
 
 <script lang="ts">
-import Api from '@/api/menu'
+import Api from '@/api/role'
+import menuApi from '@/api/menu'
 import selectMenu from './selectMenu.vue'
 import { Vue, Component, Prop, Watch, Emit } from 'vue-property-decorator'
 
@@ -88,9 +96,10 @@ export default class EditModal extends Vue {
   FormData: object = {}
   parentMenu: any = []
   menus: any = []
+  treeData: any = []
   rules: object = {
-    state: [{ required: true, message: '请选择状态', trigger: 'change' }],
-    name: [{ required: true, message: '请填写菜单名称', trigger: 'change' }],
+    role: [{ required: true, message: '请输入角色编码', trigger: 'change' }],
+    name: [{ required: true, message: '请填写角色名称', trigger: 'change' }],
     path: [{ required: true, message: '请填写菜单路径', trigger: 'change' }],
     names: [{ required: true, message: '请选择菜单', trigger: 'change' }]
     // parentId: [{ required: true, message: '请选择父菜单', trigger: 'change' }]
@@ -107,16 +116,13 @@ export default class EditModal extends Vue {
   modalChange(val?: any) {}
 
   mounted() {
-    this.getFristMenu()
-    if (this.type === 'edit') {
-      this.getMenuDetailById()
-    }
+    this.getAllMenuList()
   }
   save(): void {
     let form: any = this.$refs['form']
     form.validate((val: any) => {
       if (val) {
-        this.saveMenu()
+        this.saveRole()
       }
     })
   }
@@ -126,9 +132,13 @@ export default class EditModal extends Vue {
   }
 
   SelectmodalClose(val: any): void {
-    this.menus = val
-    let names = this.menus.map((res: any) => res.name)
-    this.$set(this.FormData, 'names', names.join(','))
+    if (val) {
+      this.menus = val
+      let names = this.menus.map((res: any) => res.name)
+      let ids = this.menus.map((res: any) => res.id)
+      this.$set(this.FormData, 'names', names.join(','))
+      this.$set(this.FormData, 'menuIds', ids)
+    }
     this.SelectModalVisible = false
   }
 
@@ -136,33 +146,59 @@ export default class EditModal extends Vue {
     this.SelectModalVisible = true
   }
 
-  async saveMenu(): Promise<any> {
+  async saveRole(): Promise<any> {
     try {
       let params: any = {}
       params = { ...this.FormData }
       if (this.type === 'edit') {
-        params.id = this.rowData.id
+        params.roleId = this.rowData.id
       }
-      await Api.saveMenu(params)
+      await Api.saveRole(params)
       this.modalChange()
     } catch (error) {}
   }
-  async getFristMenu(): Promise<any> {
+  async getRoleDetailById(): Promise<any> {
     try {
-      let data = await Api.getFristMenu()
-      this.parentMenu = data
-    } catch (error) {}
-  }
-  async getMenuDetailById(): Promise<any> {
-    try {
-      let params = {
+      let params: any = {
         id: this.rowData.id
       }
-      let data = await Api.getMenuDetailById(params)
-      this.FormData = data
+      let data = await Api.getRoleDetailById(params)
+      this.FormData = { ...this.FormData, ...data }
+      console.log(this.FormData)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  async getAllMenuList(): Promise<any> {
+    try {
+      if (this.type === 'edit') {
+        await this.getRoleDetailById()
+      }
+      let data = await menuApi.getAllMenuList()
+      this.treeData = data
+      this.$nextTick(() => {
+        let FormData: any = this.FormData
+        let menuIds = FormData.menus.map((res: any) => res.sysMenuId)
+        let names = []
+        for (let i = 0; i < this.treeData.length; i++) {
+          let trees = this.treeData[i]
+          if (menuIds.indexOf(trees.id) !== -1) {
+            names.push(trees.name)
+          }
+          if (trees.children.length > 0) {
+            for (let j = 0; j < trees.children.length; j++) {
+              let tree1 = trees.children[j]
+              if (menuIds.indexOf(tree1.id) !== -1) {
+                names.push(tree1.name)
+              }
+            }
+          }
+        }
+        this.$set(this.FormData, 'names', names.join(','))
+        this.$set(this.FormData, 'menuIds', menuIds)
+      })
     } catch (error) {}
   }
-
   get modalTitle() {
     return this.titleMap[this.type]
   }

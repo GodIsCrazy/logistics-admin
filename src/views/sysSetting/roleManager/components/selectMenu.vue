@@ -16,6 +16,7 @@
         :data="treeData"
         :props="defaultProps"
         show-checkbox
+        node-key="id"
         @node-click="handleNodeClick"
         @check-change="handleCheckChange"
         default-expand-all
@@ -39,13 +40,19 @@ export default class EditModal extends Vue {
   @Prop()
   ModalVisible: any
 
+  @Prop()
+  treeData: any
+
+  @Prop()
+  menuIds: any
+
   dialogVisible: boolean = true
   FormData: object = {}
   defaultProps: any = {
     children: 'children',
     label: 'name'
   }
-  treeData: any = []
+
   @Watch('ModalVisible')
   modalVisivleChange(newV: any, oldV: any) {
     this.dialogVisible = newV
@@ -54,7 +61,10 @@ export default class EditModal extends Vue {
   modalChange(val?: any) {}
 
   mounted() {
-    this.getAllMenuList()
+    this.$nextTick(() => {
+      let tree: any = this.$refs['menuTree']
+      tree.setCheckedKeys(this.menuIds)
+    })
   }
 
   handleModalClose(): void {
@@ -70,12 +80,6 @@ export default class EditModal extends Vue {
     let sel = tree.getCheckedNodes(false, true)
     console.log(sel)
     this.modalChange(sel)
-  }
-  async getAllMenuList(): Promise<any> {
-    try {
-      let data = await Api.getAllMenuList()
-      this.treeData = data
-    } catch (error) {}
   }
 }
 </script>
