@@ -40,7 +40,7 @@ instance.interceptors.response.use(
         }
       })
       Message.error(data.msg)
-    } else if (data.status === 'C00003') {
+    } else if (data.status === 'C00003') { // 账号密码错误
       router.push({
         path: '/login',
         query: {
@@ -48,11 +48,12 @@ instance.interceptors.response.use(
         }
       })
       Message.error(data.msg)
-    } else if (data.status === 'C00005' || data.status === 'C00006') {
+    } else if (data.status === 'C00001') { // 请求成功
+      return data.result
+    } else { // 其他错误
       Message.error(data.msg)
       return Promise.reject(data.msg)
     }
-    return data.result
   }, (err) => {
     Message.error(err)
     return Promise.reject(err)
