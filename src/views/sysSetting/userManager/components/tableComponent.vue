@@ -141,6 +141,12 @@ export default class TableComponent extends Vue {
 
   async removeRow(row: any) {
     try {
+      await this.$confirm('删除此用户，是否继续？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        cancelButtonClass: 'canel-btn',
+        type: 'warning'
+      })
       let params = {
         id: row.id
       }
